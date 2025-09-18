@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>LOOKERIN by SIMGROUP • Form Apply</title><!-- Google Fonts disabled in preview to avoid permission prompts. Use self-hosted Nunito in production (see note). -->
+  <style>
+    :root{ --brand:#1BAFBF; --brand-ink:#0d5c66; --ink:#0f172a; --muted:#f1f5f9; --line:#e2e8f0; --radius:18px; }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:#fff}
+    .wrap{max-width:820px;margin:0 auto;padding:24px 14px 60px}
+    header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#fff .9,#fff .7);backdrop-filter:saturate(140%) blur(6px);border-bottom:1px solid var(--line)}
+    .head-inner{max-width:820px;margin:0 auto;padding:14px;display:flex;align-items:center;gap:12px}
+    .logo{width:40px;height:40px;border-radius:12px;background:conic-gradient(from 120deg,#76e4ef,#22d3ee,#0ea5b8,#0891b2,#76e4ef);display:grid;place-items:center;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+    .logo::before{content:"";width:16px;height:16px;border:3px solid #fff;border-radius:50%}
+    h1{font-family:'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:22px;line-height:1.15;margin:0;color:var(--brand-ink);letter-spacing:.25px}
+    .tag{display:inline-block;margin-left:8px;font:700 11px/1 'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--muted);border:1px solid var(--line);padding:6px 8px;border-radius:999px;color:#0b3d44}
+
+    /* Card */
+    form{margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.06)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    @media(max-width:720px){.grid{grid-template-columns:1fr;gap:10px}}
+    label{display:block;font:700 11px/1.4 'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#0b3d44;margin-bottom:6px}
+    .req::after{content:" *"; color:#ef4444; font-weight:800}
+    input,select,textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:600 13px/1.3 'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#0f172a;background:#fff}
+    select:disabled, input:disabled{opacity:.7;cursor:not-allowed}
+    textarea{min-height:90px;resize:vertical}
+    .hint{font:600 11px/1.4 'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#475569;margin-top:6px}
+    .row{display:flex;gap:12px}
+    .row > *{flex:1}
+    .chkgrp{display:flex;flex-wrap:wrap;gap:8px}
+    /* SIM group: keep single row with horizontal scroll on small screens */
+    #grp-sim{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:6px}
+    .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);padding:6px 10px;border-radius:999px;background:#fff;font:700 11px/1 'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;cursor:pointer;white-space:nowrap}
+    .readonly{background:#f8fafc}
+
+    /* Wizard */
+    .steps{display:flex;gap:8px;margin-bottom:14px;align-items:center}
+    .step-dot{display:flex;align-items:center;gap:8px}
+    .dot{width:26px;height:26px;border-radius:999px;display:grid;place-items:center;border:2px solid var(--line);font:800 12px/1 'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    .active .dot{border-color:#2563eb;color:#fff;background:linear-gradient(180deg,#60a5fa,#2563eb 70%)}
+    .done .dot{background:#10b98122;border-color:#10b981;color:#065f46}
+    .label{font:800 12px/1 'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#0b3d44}
+    .sep{flex:1;height:2px;background:linear-gradient(90deg,var(--line),#dbeafe,var(--line));border-radius:999px}
+
+    .slide{display:none}
+    .slide.active{display:block}
+
+    .actions{margin-top:16px;display:flex;gap:10px;justify-content:space-between}
+    .btn{border:none;border-radius:999px;padding:12px 16px;font:800 13px/1 'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;cursor:pointer;transition:filter .2s ease, transform .06s ease}
+    /* Blue metallic glossy for primary button */
+    .btn-primary{position:relative;background:linear-gradient(180deg,#6ba8ff 0%,#2f6bed 64%,#1e40af 100%);color:#f8fafc;border:1px solid #1d4ed8;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 8px 20px rgba(29,78,216,.25)}
+    .btn-primary::after{content:"";position:absolute;inset:0;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.35) 0%,rgba(255,255,255,0) 60%);pointer-events:none}
+    .btn-primary:hover{filter:brightness(1.05)}
+    .btn-primary:active{transform:translateY(1px)}
+    .btn-ghost{background:#fff;color:#0f172a;border:1px solid var(--line)}
+    .btn[disabled]{opacity:.6;cursor:not-allowed}
+
+    .pill{display:inline-flex;gap:6px;align-items:center;font:800 11px/1 'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#0b4c57;background:var(--muted);border:1px solid var(--line);padding:6px 10px;border-radius:999px}
+    .note{margin-top:10px;font:600 12px/1.5 'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#0b3d44}
+    .inline-actions button{border:none;background:transparent;padding:0;margin:0;color:#1d4ed8;text-decoration:underline;cursor:pointer;font:800 11px/1 'Nunito',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+
+    /* Mobile fine-tuning */
+    @media(max-width:720px){
+      .head-inner{padding:12px;gap:10px}
+      h1{font-size:18px}
+      .dot{width:22px;height:22px;font-size:11px}
+      .steps{gap:6px}
+      .actions{gap:8px}
+      input,select,textarea{padding:10px 12px;font-size:13px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="head-inner">
+      <div class="logo" aria-hidden="true"></div>
+      <h1>LOOKERIN <span class="tag">Form Apply</span></h1>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="pill" id="prefill-pill" style="display:none">
+      <span id="prefill-job">-</span> • <span id="prefill-area">-</span>
+    </div>
+
+    <iframe id="submitFrame" name="submitFrame" hidden></iframe>
+
+    <form id="applyForm"
+          action="https://script.google.com/macros/s/AKfycbzDrmC9uOJrRQfTA-12umzraq_cwLtrBr6qJ35pT0d0XYV_qlRQQxkPMzswL1m710N37g/exec"
+          method="POST" enctype="multipart/form-data" target="submitFrame" novalidate>
+
+      <!-- Hidden fixed/prefill -->
+      <input type="hidden" name="sumber" value="LOOKERIN">
+      <input type="hidden" name="minat1" id="minat1">
+      <input type="hidden" name="kotaMinat" id="kotaMinat">
+      <input type="hidden" name="returnUrl" value="https://sourcingsimgroup.github.io/joblookerin/">
+
+      <!-- Hidden fallback Base64 -->
+      <input type="hidden" name="cv_name" id="cv_name">
+      <input type="hidden" name="cv_type" id="cv_type">
+      <input type="hidden" name="cv_b64"  id="cv_b64">
+
+      <!-- Hidden numeric for salary (avoid sending formatted text) -->
+      <input type="hidden" name="gajiTerakhir" id="gajiTerakhir">
+      <input type="hidden" name="harapanGaji" id="harapanGaji">
+
+      <!-- ===== Wizard Header ===== -->
+      <div class="steps" id="stepsHead">
+        <div class="step-dot active" data-step="0"><div class="dot">1</div><div class="label">Profil</div></div>
+        <div class="sep"></div>
+        <div class="step-dot" data-step="1"><div class="dot">2</div><div class="label">Pendidikan</div></div>
+        <div class="sep"></div>
+        <div class="step-dot" data-step="2"><div class="dot">3</div><div class="label">Pengalaman</div></div>
+        <div class="sep"></div>
+        <div class="step-dot" data-step="3"><div class="dot">4</div><div class="label">Apply</div></div>
+      </div>
+
+      <!-- ===== Slide 1: Profil ===== -->
+      <section class="slide active" data-title="Profil">
+        <div class="grid">
+          <div>
+            <label>SUMBER INFORMASI LOWONGAN</label>
+            <input type="text" value="LOOKERIN" class="readonly" readonly>
+          </div>
+          <div>
+            <label for="email" class="req">EMAIL AKTIF</label>
+            <input type="email" id="email" name="email" required placeholder="nama@domain.com" autocomplete="email">
+          </div>
+
+          <div>
+            <label for="namaLengkap" class="req">NAMA LENGKAP</label>
+            <input type="text" id="namaLengkap" name="namaLengkap" required placeholder="Nama sesuai KTP">
+          </div>
+          <div>
+            <label for="tanggalLahir" class="req">TANGGAL LAHIR</label>
+            <input type="date" id="tanggalLahir" name="tanggalLahir" required>
+          </div>
+
+          <div>
+            <label for="jenisKelamin" class="req">JENIS KELAMIN</label>
+            <select id="jenisKelamin" name="jenisKelamin" required>
+              <option value="">Pilih</option>
+              <option>Laki-laki</option>
+              <option>Perempuan</option>
+              <option>Lainnya</option>
+            </select>
+          </div>
+          <div>
+            <label for="wa" class="req">NOMOR WA AKTIF</label>
+            <input type="tel" id="wa" name="wa" required inputmode="tel" placeholder="08xxxxxxxxxx" pattern="^0[0-9]{9,14}$" title="Mulai dengan 0, 10–15 digit">
+          </div>
+
+          <div>
+            <label for="hp" class="req">NOMOR HP AKTIF</label>
+            <input type="tel" id="hp" name="hp" required inputmode="tel" placeholder="08xxxxxxxxxx" pattern="^0[0-9]{9,14}$" title="Mulai dengan 0, 10–15 digit">
+          </div>
+          <div>
+            <label class="req">KEPEMILIKAN SIM AKTIF</label>
+            <div class="chkgrp" id="grp-sim">
+              <label class="chip"><input type="checkbox" name="sim" value="SIM A" id="sim-first"> SIM A</label>
+              <label class="chip"><input type="checkbox" name="sim" value="SIM B"> SIM B</label>
+              <label class="chip"><input type="checkbox" name="sim" value="SIM C"> SIM C</label>
+              <label class="chip"><input type="checkbox" name="sim" value="Lainnya"> Lainnya</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="alamat" class="req">ALAMAT DOMISILI</label>
+              <textarea id="alamat" name="alamat" required placeholder="Nama jalan, RT/RW, No rumah"></textarea>
+            </div>
+          </div>
+
+          <div>
+            <label for="provinsiDom" class="req">PROVINSI DOMISILI</label>
+            <select id="provinsiDom" name="provinsiDom"$1required>
+              <option value="">Pilih provinsi…</option>
+              <option value="11">Aceh</option>
+              <option value="12">Sumatera Utara</option>
+              <option value="13">Sumatera Barat</option>
+              <option value="14">Riau</option>
+              <option value="21">Kepulauan Riau</option>
+              <option value="15">Jambi</option>
+              <option value="17">Bengkulu</option>
+              <option value="16">Sumatera Selatan</option>
+              <option value="18">Lampung</option>
+              <option value="19">Bangka Belitung</option>
+              <option value="36">Banten</option>
+              <option value="31">DKI Jakarta</option>
+              <option value="32">Jawa Barat</option>
+              <option value="33">Jawa Tengah</option>
+              <option value="34">Daerah Istimewa Yogyakarta</option>
+              <option value="35">Jawa Timur</option>
+              <optgroup label="Bali dan Nusa Tenggara">
+                <option value="51">Bali</option>
+                <option value="52">Nusa Tenggara Barat</option>
+                <option value="53">Nusa Tenggara Timur</option>
+              </optgroup>
+              <optgroup label="Kalimantan">
+                <option value="61">Kalimantan Barat</option>
+                <option value="62">Kalimantan Tengah</option>
+                <option value="63">Kalimantan Selatan</option>
+                <option value="64">Kalimantan Timur</option>
+                <option value="65">Kalimantan Utara</option>
+              </optgroup>
+            </select>
+          </div>
+          <div>
+            <label for="kabupatenDom" class="req">KAB/KOTA DOMISILI</label>
+            <input type="text" id="kabupatenDom" required placeholder="Tulis kabupaten/kota…">
+          </div>
+          <div>
+            <label for="kecamatan" class="req">KECAMATAN</label>
+            <input type="text" id="kecamatan" name="kecamatan" required placeholder="Tulis kecamatan…">
+          </div>
+          <div>
+            <label for="kelurahan" class="req">KELURAHAN</label>
+            <input type="text" id="kelurahan" name="kelurahan" required placeholder="Tulis kelurahan…">
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Slide 2: Pendidikan ===== -->
+      <section class="slide" data-title="Pendidikan">
+        <div class="grid">
+          <div>
+            <label for="pendidikan" class="req">PENDIDIKAN TERAKHIR</label>
+            <select id="pendidikan" name="pendidikan" required>
+              <option value="">Pilih</option>
+              <option>SMA/SMK</option>
+              <option>D3</option>
+              <option>S1</option>
+              <option>S2</option>
+              <option>Lainnya</option>
+            </select>
+          </div>
+          <div></div>
+
+          <div>
+            <label for="namaSekolahUniv" class="req">NAMA SEKOLAH / NAMA UNIVERSITAS</label>
+            <input type="text" id="namaSekolahUniv" name="namaSekolahUniv" required>
+          </div>
+          <div>
+            <label for="jurusan" class="req">JURUSAN</label>
+            <input type="text" id="jurusan" name="jurusan" required>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Slide 3: Pengalaman Kerja ===== -->
+      <section class="slide" data-title="Pengalaman Kerja">
+        <div class="grid">
+          <div>
+            <label for="pengalamanTerakhir" class="req">PENGALAMAN KERJA TERAKHIR</label>
+            <input type="text" id="pengalamanTerakhir" name="pengalamanTerakhir" required placeholder="Perusahaan / Posisi">
+          </div>
+          <div>
+            <label for="durasiPengalaman" class="req">DURASI PENGALAMAN KERJA</label>
+            <input type="text" id="durasiPengalaman" name="durasiPengalaman" required placeholder="contoh: 2 tahun 3 bulan">
+          </div>
+
+          <div>
+            <label>MINAT POSISI KERJA PERTAMA</label>
+            <input type="text" id="minat1_view" class="readonly" readonly placeholder="Otomatis dari job yang dipilih">
+            <div class="hint">Terisi otomatis dari loker yang Anda klik.</div>
+          </div>
+          <div>
+            <label for="minat2">MINAT POSISI KERJA KEDUA</label>
+            <input type="text" id="minat2" name="minat2" placeholder="Opsional">
+          </div>
+
+          <div>
+            <label for="minat3">MINAT POSISI KERJA KETIGA</label>
+            <input type="text" id="minat3" name="minat3" placeholder="Opsional">
+          </div>
+          <div></div>
+
+          <div>
+            <label for="gajiTerakhir_view" class="req">GAJI TERAKHIR (IDR)</label>
+            <input type="text" id="gajiTerakhir_view" inputmode="numeric" placeholder="contoh: 5.000.000" required>
+          </div>
+          <div>
+            <label for="harapanGaji_view" class="req">HARAPAN GAJI (IDR)</label>
+            <input type="text" id="harapanGaji_view" inputmode="numeric" placeholder="contoh: 6.500.000" required>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== Slide 4: Apply ===== -->
+      <section class="slide" data-title="Apply">
+        <div class="grid">
+          <div>
+            <label for="provinsiMinat">PROVINSI MINAT PENEMPATAN</label>
+            <select id="provinsiMinat" name="provinsiMinat">
+              <option value="">Pilih provinsi minat…</option>
+              <option value="Aceh">Aceh (Banda Aceh)</option>
+              <option value="Sumatera Utara">Sumatera Utara (Medan)</option>
+              <option value="Sumatera Barat">Sumatera Barat (Padang)</option>
+              <option value="Riau">Riau (Pekanbaru)</option>
+              <option value="Kepulauan Riau">Kepulauan Riau (Tanjung Pinang)</option>
+              <option value="Jambi">Jambi (Jambi)</option>
+              <option value="Bengkulu">Bengkulu (Bengkulu)</option>
+              <option value="Sumatera Selatan">Sumatera Selatan (Palembang)</option>
+              <option value="Lampung">Lampung (Bandar Lampung)</option>
+              <option value="Bangka Belitung">Bangka Belitung (Pangkal Pinang)</option>
+              <option value="Banten">Banten (Serang)</option>
+              <option value="DKI Jakarta">DKI Jakarta (Jakarta)</option>
+              <option value="Jawa Barat">Jawa Barat (Bandung)</option>
+              <option value="Jawa Tengah">Jawa Tengah (Semarang)</option>
+              <option value="Daerah Istimewa Yogyakarta">Daerah Istimewa Yogyakarta (Yogyakarta)</option>
+              <option value="Jawa Timur">Jawa Timur (Surabaya)</option>
+              <optgroup label="Bali dan Nusa Tenggara">
+                <option value="Bali">Bali (Denpasar)</option>
+                <option value="Nusa Tenggara Barat">Nusa Tenggara Barat (Mataram)</option>
+                <option value="Nusa Tenggara Timur">Nusa Tenggara Timur (Kupang)</option>
+              </optgroup>
+              <optgroup label="Kalimantan">
+                <option value="Kalimantan Barat">Kalimantan Barat (Pontianak)</option>
+                <option value="Kalimantan Tengah">Kalimantan Tengah (Palangkaraya)</option>
+                <option value="Kalimantan Selatan">Kalimantan Selatan (Banjarbaru)</option>
+                <option value="Kalimantan Timur">Kalimantan Timur (Samarinda)</option>
+                <option value="Kalimantan Utara">Kalimantan Utara (Tanjung Selor)</option>
+              </optgroup>
+            </select>
+          </div>
+          <div>
+            <label for="kotaMinat_view">KOTA MINAT PENEMPATAN (otomatis)</label>
+            <input type="text" id="kotaMinat_view" class="readonly" readonly placeholder="Otomatis dari Area loker">
+          </div>
+
+          <div>
+            <label for="cv" class="req">UPLOAD CV (PDF SAJA)</label>
+            <input type="file" id="cv" name="cv" required accept=".pdf,application/pdf">
+            <div class="hint">Maks. ~10–12MB disarankan. Hanya PDF.</div>
+          </div>
+          <div></div>
+        </div>
+      </section>
+
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" id="prevBtn">Kembali</button>
+        <div style="display:flex;gap:10px">
+          <!-- Save button removed as requested -->
+          <button type="button" class="btn btn-primary" id="nextBtn">Lanjut</button>
+          <button class="btn btn-primary" id="submitBtn" type="submit" style="display:none">Kirim Lamaran</button>
+        </div>
+      </div>
+
+      <p class="note">Setelah kirim, Anda akan otomatis kembali ke portal.</p>
+    </form>
+  </div>
+
+  <script>
+    const PORTAL_URL = 'https://sourcingsimgroup.github.io/joblookerin/';
+    // Disable network calls inside ChatGPT canvas preview to avoid permission prompts
+    const ALLOW_NETWORK = !/chatgpt\.com/i.test(location.hostname);
+
+    // === Helper
+    function byId(id){ return document.getElementById(id); }
+
+    // === Prefill job & area dari query ===
+    (function(){
+      const q = new URLSearchParams(location.search);
+      const job  = (q.get('job')  || '').trim();
+      const area = (q.get('area') || '').trim(); // KOTA penempatan dari portal
+
+      if (job)  { byId('minat1').value = job; byId('minat1_view').value = job; }
+      if (area) { byId('kotaMinat').value = area; byId('kotaMinat_view').value = area; }
+
+      if (job || area) {
+        byId('prefill-job').textContent = job || '-';
+        byId('prefill-area').textContent = area || '-';
+        byId('prefill-pill').style.display = 'inline-flex';
+      }
+    })();
+
+    // === Ambil PROVINSI dari sheet "wilayah" dan isi otomatis dropdown minat sesuai kotaMinat ===
+    if (ALLOW_NETWORK) (function(){
+      const DOC_ID = '1ESGkZf2P_0XMnyJgb7wN_L_Xo144nO6GPg30rrBZW58';
+      const SHEET = 'wilayah';
+      const GID   = '1534372458';
+      const GVIZ_JSON = `https://docs.google.com/spreadsheets/d/${DOC_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET)}`;
+      const GVIZ_CSV  = `https://docs.google.com/spreadsheets/d/${DOC_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET)}`;
+      const EXPORT_CSV= `https://docs.google.com/spreadsheets/d/${DOC_ID}/export?format=csv&gid=${GID}`;
+      const MIRROR = u => 'https://r.jina.ai/https/' + u.replace(/^https?:\/\//,'');
+
+      const norm = s => String(s||'').trim().toUpperCase()
+        .replace(/[.\-]/g,' ')
+        .replace(/\s+/g,' ')
+        .replace(/^KABUPATEN\s+|^KAB\.\s+|^KOTA\s+|^ADM\.\s+|^ADMINISTRASI\s+/g,'')
+        .trim();
+
+      function looksHeader(cells){
+        const arr = (cells||[]).map(x=>String(x||'').toLowerCase());
+        return ['provinsi','kota','kabupaten'].some(k=> arr.includes(k) || arr.join(' ').includes(k));
+      }
+      function parseCSV(text){
+        const out=[]; let row=[]; let cur=''; let q=false;
+        for(let i=0;i<text.length;i++){
+          const c=text[i];
+          if(c==='"'){ if(q && text[i+1]==='"'){cur+='"';i++;} else q=!q; }
+          else if(c===',' && !q){ row.push(cur); cur=''; }
+          else if((c==='\n'||c==='\r') && !q){ if(c==='\r' && text[i+1]==='\n') i++; row.push(cur); out.push(row); row=[]; cur=''; }
+          else cur+=c;
+        }
+        if(cur.length>0 || row.length){ row.push(cur); out.push(row); }
+        return out.filter(r=> r.some(cell => (cell||'').trim().length));
+      }
+      function parseGVizJSON(txt){
+        try{
+          const json = JSON.parse(txt.slice(txt.indexOf('(')+1, txt.lastIndexOf(')')));
+          const rs = (json.table && json.table.rows) ? json.table.rows : [];
+          return rs.map(r => (r.c||[]).map(c => c ? (c.f ?? c.v ?? '') : ''));
+        }catch{ return []; }
+      }
+
+      async function getTable(){
+        const order = [GVIZ_JSON, GVIZ_CSV, EXPORT_CSV, MIRROR(GVIZ_JSON), MIRROR(GVIZ_CSV), MIRROR(EXPORT_CSV)];
+        for(const url of order){
+          try{
+            const r = await fetch(url, {mode:'cors', cache:'no-cache'}); if(!r.ok) continue;
+            const t = await r.text();
+            const arr = url.includes('out:json') ? parseGVizJSON(t) : parseCSV(t);
+            if (arr && arr.length) return arr;
+          }catch(e){}
+        }
+        return [];
+      }
+
+      function buildMap(rows){
+        if (!rows.length) return {};
+        const header = looksHeader(rows[0]) ? rows[0] : null;
+        let colProv=-1, colCity=-1;
+        if (header){
+          header.forEach((h,i)=>{
+            const s=String(h||'').toLowerCase();
+            if (colProv<0 && s.includes('provinsi')) colProv=i;
+            if (colCity<0 && (s.includes('kota') || s.includes('kabupaten'))) colCity=i;
+          });
+        }
+        if (colCity<0 || colProv<0){ colCity=0; colProv=1; }
+        const start = header ? 1 : 0;
+        const map = {};
+        for(let i=start;i<rows.length;i++){
+          const r = rows[i];
+          const kota = norm(r[colCity]);
+          const prov = (r[colProv]||'').toString().trim();
+          if (kota && prov && !map[kota]) map[kota]=prov;
+        }
+        const override = (k)=> {
+          if (k.startsWith('JAKARTA')) return 'DKI Jakarta';
+          if (k.startsWith('TANGERANG')) return 'Banten';
+          if (k==='DEPOK' || k==='BEKASI' || k==='BOGOR' || k==='BANDUNG') return 'Jawa Barat';
+          if (k==='SURABAYA') return 'Jawa Timur';
+          if (k==='SEMARANG') return 'Jawa Tengah';
+          return '';
+        };
+        return { map, override };
+      }
+
+      function setMinatSelect(prov){
+        const sel = byId('provinsiMinat');
+        const want = String(prov||'').trim().toUpperCase().replace(/^PROVINSI\s+/,'');
+        const opts = Array.from(sel.options);
+        for(const o of opts){
+          const val = (o.value||'').toString().trim().toUpperCase();
+          if (val && val===want){ sel.value = o.value; break; }
+        }
+      }
+
+      (async function(){
+        const table = await getTable();
+        const { map, override } = buildMap(table);
+        const kotaRaw = byId('kotaMinat').value || '';
+        const k = norm(kotaRaw);
+        let prov = (map && map[k]) || override(k) || '';
+        if (prov){ setMinatSelect(prov); }
+      })();
+    })();
+
+    // === Domisili: mode free-text (tanpa API) ===
+    (function(){
+      try{
+        console.assert(document.getElementById('kabupatenDom').tagName==='INPUT', 'kabupatenDom is free-text input');
+        console.assert(!document.getElementById('kecamatan').disabled, 'kecamatan enabled');
+        console.assert(!document.getElementById('kelurahan').disabled, 'kelurahan enabled');
+      }catch(e){ console.warn('Sanity test warning', e); }
+    })();
+
+    // === Wizard Controller & Validation ===
+    (function(){
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const steps  = Array.from(document.querySelectorAll('.step-dot'));
+      const prevBtn = byId('prevBtn');
+      const nextBtn = byId('nextBtn');
+      const submitBtn = byId('submitBtn');
+      let idx = 0;
+
+      function show(i){
+        idx = Math.max(0, Math.min(i, slides.length-1));
+        slides.forEach((s,k)=> s.classList.toggle('active', k===idx));
+        steps.forEach((e,k)=>{
+          e.classList.toggle('active', k===idx);
+          e.classList.toggle('done', k<idx);
+        });
+        prevBtn.style.visibility = idx===0 ? 'hidden' : 'visible';
+        nextBtn.style.display = idx===slides.length-1 ? 'none' : 'inline-block';
+        submitBtn.style.display = idx===slides.length-1 ? 'inline-block' : 'none';
+        nextBtn.textContent = idx===slides.length-2 ? 'Lanjut ke Apply' : 'Lanjut';
+        window.scrollTo({top:0, behavior:'smooth'});
+      }
+
+      function stepValid(){
+        const s = slides[idx];
+        const required = s.querySelectorAll('[required]');
+        for(const el of required){
+          if (el.disabled) continue;
+          if (!el.reportValidity()) return false;
+        }
+        if (idx===0){
+          const okS = Array.from(document.querySelectorAll('input[name="sim"]')).some(cb=>cb.checked);
+          if (!okS){ alert('Pilih minimal satu kepemilikan SIM.'); return false; }
+        }
+        return true;
+      }
+
+      nextBtn.addEventListener('click', ()=>{ if(stepValid()) show(idx+1); });
+      prevBtn.addEventListener('click', ()=> show(idx-1));
+      steps.forEach(d => d.addEventListener('click', ()=>{ const i = Number(d.dataset.step||0); if(i<=idx && stepValid()) show(i); }));
+
+      show(0);
+
+      // Tests for wizard state
+      (function wizardTests(){
+        try{
+          console.assert(slides.length===4, 'Should have 4 slides');
+          console.assert(document.querySelectorAll('.step-dot').length===4, 'Should have 4 step dots');
+        }catch(e){ console.warn('Wizard tests warn:', e); }
+      })();
+    })();
+
+    // === Salary formatter (IDR) ===
+    (function(){
+      const map = [ ['gajiTerakhir_view','gajiTerakhir'], ['harapanGaji_view','harapanGaji'] ];
+      function toDigits(s){ return (s||'').toString().replace(/[^0-9]/g,''); }
+      function formatIDR(d){ return d.replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
+      for(const [viewId, nameId] of map){
+        const view = byId(viewId); const hid = byId(nameId);
+        if(!view||!hid) continue;
+        view.addEventListener('input', ()=>{
+          const digits = toDigits(view.value);
+          hid.value = digits;
+          view.value = digits ? formatIDR(digits) : '';
+        });
+      }
+      // basic tests
+      console.assert(formatIDR('1234567')==='1.234.567','formatIDR test');
+      console.assert(toDigits('Rp 1.250.000')==='1250000','toDigits test');
+    })();
+
+    // === Validasi & Submit: PDF only + Redirect ke Portal ===
+    (function(){
+      const form = byId('applyForm');
+      const btn  = byId('submitBtn');
+      const iframe = byId('submitFrame');
+
+      iframe.addEventListener('load', function(){
+        location.href = PORTAL_URL;
+      }, { once:true });
+
+      form.addEventListener('submit', function(ev){
+        // Validasi final semua required
+        if (!form.reportValidity()) { ev.preventDefault(); return; }
+
+        // Pastikan gaji wajib terisi (hidden numeric juga)
+        const gajiTerakhir = byId('gajiTerakhir').value.trim();
+        const harapanGaji  = byId('harapanGaji').value.trim();
+        if (!gajiTerakhir || !harapanGaji){
+          ev.preventDefault();
+          alert('Mohon isi Gaji Terakhir dan Harapan Gaji.');
+          return;
+        }
+
+        // Validasi file PDF saja
+        const fileInput = byId('cv');
+        const file = fileInput.files && fileInput.files[0];
+        if (!file){ return; }
+        if (!(file.type === 'application/pdf' || /\.pdf$/i.test(file.name))){
+          ev.preventDefault();
+          alert('File harus PDF.');
+          return;
+        }
+
+        ev.preventDefault();
+        btn.disabled = true; btn.textContent = 'Mengirim…';
+
+        const MAX_MB = 12; // base64 ~ +33%
+        if (file.size > MAX_MB * 1024 * 1024) {
+          alert('Ukuran file terlalu besar. Maksimal sekitar ' + MAX_MB + 'MB.');
+          btn.disabled = false; btn.textContent = 'Kirim Lamaran';
+          return;
+        }
+
+        const rd = new FileReader();
+        rd.onload = function(e){
+          const dataUrl = String(e.target.result || '');
+          const b64 = dataUrl.split(',')[1] || '';
+          byId('cv_name').value = file.name || 'CV.pdf';
+          byId('cv_type').value = 'application/pdf';
+          byId('cv_b64').value  = b64;
+          form.submit();
+        };
+        rd.onerror = function(){ form.submit(); };
+        rd.readAsDataURL(file);
+      });
+    })();
+  </script>
+</body>
+</html>
