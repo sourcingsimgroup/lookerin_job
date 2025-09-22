@@ -84,9 +84,27 @@
       .hamburger{display:inline-flex}
     }
 
-    .card{position:relative;border:1px solid var(--line);background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 14px;transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease; cursor:pointer}
+    .card{position:relative;border:1px solid var(--line);background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 14px 48px;transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease; cursor:pointer}
     .card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.08);border-color:#bae6fd}
     .card:focus{outline:2px solid #bae6fd; outline-offset:2px}
+
+    /* Capsule status di pojok kanan atas */
+    .cap-status{position:absolute;top:10px;right:10px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:6px 8px;display:grid;grid-auto-flow:row;justify-items:center;gap:2px;min-width:64px}
+    .cap-status .ico{line-height:0}
+    .cap-status .ico svg{width:18px;height:18px}
+    .cap-status .lbl{font-size:10px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;white-space:nowrap;color:#0b4c57}
+    .cap-status.urgent .lbl{color:#b42318}
+    .cap-status.hiring .lbl{color:#067647}
+    /* Warna ikon status */
+    .cap-status.urgent .ico svg{color:#ef4444}
+    .cap-status.hiring .ico svg{color:#10b981}
+
+    /* Tombol kapsul Detail */
+    .card-ft{position:absolute;right:12px;bottom:12px;display:flex;gap:8px}
+    .pill{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 10px;font:800 11px/1 Montserrat;letter-spacing:.3px;display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+    .pill-detail{background:linear-gradient(180deg,#76e4ef 0%, #22d3ee 60%, #0ea5b8 100%); border-color:#0ea5b8; color:#ffffff; box-shadow: inset 0 1px 0 rgba(255,255,255,.55), var(--shadow);}
+    .pill-detail:hover{filter:brightness(0.98)}
+    .pill-detail:active{transform:translateY(1px)}
 
     .job-title,.job-parent{display:flex;align-items:center;gap:8px}
     .job-title{margin:2px 0 4px;font-size:12px;font-weight:800;color:#083344}
@@ -106,7 +124,11 @@
 
     .status{padding:24px;text-align:center;color:#334155}
 
+    /* Modal Detail */
     dialog{width:min(700px, 94vw);border:none;border-radius:20px;padding:0;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+    /* Blur latar belakang ketika modal detail tampil */
+    #dlg::backdrop{backdrop-filter: blur(6px); background: rgba(0,0,0,.2)}
+
     .modal{padding:18px 18px 16px}
     .modal .title h2{font-size:20px;color:#062e33;margin:0}
     .modal .sub{margin:6px 0 10px;font-size:13px;color:#0b4c57;font-weight:700}
@@ -247,9 +269,9 @@
     const EXPORT_CSV = `https://docs.google.com/spreadsheets/d/${DOC_ID}/export?format=csv&sheet=${encodeURIComponent(SHEET)}`;
     const MIRROR = u => 'https://r.jina.ai/https/' + u.replace(/^https?:\/\//,'');
 
-    // Kolom: C=Area, D=Nama Job, E=Group Job, F=Kualifikasi, G=Salary
-    const COL = { AREA:2, JOB_NAME:3, JOB_PARENT:4, QUAL:5, SALARY:6 };
-    const CACHE_KEY = 'lookerin_cache_v8';
+    // Kolom: C=Area, D=Nama Job, E=Group Job, F=Kualifikasi, G=Salary, H=Status (urgent/always hiring)
+    const COL = { AREA:2, JOB_NAME:3, JOB_PARENT:4, QUAL:5, SALARY:6, STATUS:7 };
+    const CACHE_KEY = 'lookerin_cache_v9';
 
     // ====== Elemen ======
     const $grid = document.getElementById('grid');
@@ -300,7 +322,7 @@
 
     function looksLikeHeader(r0){
       const base = (r0||[]).map(x=>String(x||'').toLowerCase());
-      const keys = ['area','nama job','job parent','group job','kualifikasi','salary','gaji'];
+      const keys = ['area','nama job','job parent','group job','kualifikasi','salary','gaji','status'];
       return keys.some(k => base.includes(k));
     }
     function stripHeader(arr){ if(!arr || !arr.length) return arr || []; return looksLikeHeader(arr[0]) ? arr.slice(1) : arr; }
@@ -350,7 +372,7 @@
           }
         }catch(e){ lastErr = e.message; }
       }
-      throw new Error('Semua sumber gagal ('+ lastErr +'). Pastikan Sheet \''+SHEET+'\' dibuka untuk siapa saja dengan tautan (Viewer).');
+      throw new Error('Semua sumber gagal ('+ lastErr +'). Pastikan Sheet \'"+SHEET+"\' dibuka untuk siapa saja dengan tautan (Viewer).');
     }
 
     function updateParentOptions(){
@@ -371,9 +393,26 @@
       updateMobileParentOptions();
     }
 
-    // ICONS map (dipotong demi singkat - tetap sama dengan versi kamu)
-    const I = { briefcase:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2h3a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V8a2 2 0 0 1 2-2h3V4Zm2 0v2h2V4h-2Z"/></svg>', /* ... ikon lain sama ... */ tag:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 12V5h7l7 7-7 7-7-7Zm12-5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>' };
+    // ICONS
+    const I = {
+      briefcase:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2h3a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V8a2 2 0 0 1 2-2h3V4Zm2 0v2h2V4h-2Z"/></svg>',
+      tag:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 12V5h7l7 7-7 7-7-7Zm12-5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>',
+      fire:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 2.1s1.7 3.3-.8 5.8c0 0-.3-2.2-2.3-3.6 0 0 .7 2.4-1.2 4.1C7.1 9 6 10.9 6 13a6 6 0 0 0 12 0c0-2.3-1.2-3.9-2.6-5.3-.9-.9-1.6-1.7-1.9-2.8Z"/></svg>',
+      dot:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="6"/></svg>'
+    };
     function iconFor(parentName){ const k=(parentName||'').toLowerCase(); let svg=I.briefcase; if(k.includes('sales')) svg=I.tag; return `<span class="i" aria-hidden="true">${svg}</span>`; }
+
+    function statusCapsule(status){
+      const s = toKey(status||'');
+      if(!s) return '';
+      if(s.includes('urgent')){
+        return `<div class="cap-status urgent" aria-label="Urgent hiring">\n          <span class="ico">${I.fire}</span>\n          <span class="lbl">URGENT</span>\n        </div>`;
+      }
+      if(s.includes('always')){
+        return `<div class="cap-status hiring" aria-label="Selalu membuka lowongan">\n          <span class="ico">${I.dot}</span>\n          <span class="lbl">ALWAYS HIRING</span>\n        </div>`;
+      }
+      return '';
+    }
 
     function templateCard(r, idx){
       const job   = esc(r[COL.JOB_NAME]||'');
@@ -381,9 +420,11 @@
       const area  = esc(r[COL.AREA]||'-');
       const qual  = esc(r[COL.QUAL]||'');
       const sal   = esc(r[COL.SALARY]||'');
+      const stat  = esc(r[COL.STATUS]||'');
       const icon  = iconFor(par);
       return `
         <article class="card" data-i="${idx}" data-job="${job}" data-parent="${par}" data-area="${area}" data-qual="${qual}" data-salary="${sal}" tabindex="0" role="button" aria-label="Lihat detail ${job || '-'}">
+          ${statusCapsule(stat)}
           <div class="job-title">${icon}<span>${job || '-'}</span></div>
           <div class="job-parent">${icon}<span>${par || '-'}</span></div>
           <div class="loc">
@@ -393,6 +434,9 @@
           <div class="sal">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 7h18a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Zm3 2v6m12-6v6"/><circle cx="12" cy="12" r="2.5"/></svg>
             <span>${sal || '-'}</span>
+          </div>
+          <div class="card-ft">
+            <button class="pill pill-detail" type="button" aria-label="Lihat detail ${job}">Detail</button>
           </div>
         </article>`;
     }
@@ -473,8 +517,19 @@
     }
     function closeModal(){ if($dlg.open) $dlg.close(); else $dlg.removeAttribute('open'); }
 
-    // === Klik kartu & akses keyboard membuka detail ===
+    // === Klik kartu / tombol Detail & akses keyboard membuka detail ===
     document.addEventListener('click', e => {
+      // Klik tombol Detail
+      if(e.target.closest('.pill-detail')){
+        const card = e.target.closest('.card');
+        if(card){
+          const idx = Number(card.dataset.i);
+          const r = filtered[idx] || [];
+          openModal({ job: r[COL.JOB_NAME], parent: r[COL.JOB_PARENT], area: r[COL.AREA], qual: r[COL.QUAL], sal: r[COL.SALARY] });
+          return;
+        }
+      }
+      // Klik keseluruhan kartu
       const card = e.target.closest('.card');
       if(card && $grid.contains(card)){
         const idx = Number(card.dataset.i);
