@@ -93,7 +93,7 @@
       <span id="prefill-job">-</span> • <span id="prefill-area">-</span>
     </div>
 
-        <iframe id="submitFrame" name="submitFrame" hidden></iframe>
+    <iframe id="submitFrame" name="submitFrame" hidden></iframe>
 
     <form id="applyForm"
           action="https://script.google.com/macros/s/AKfycbzDrmC9uOJrRQfTA-12umzraq_cwLtrBr6qJ35pT0d0XYV_qlRQQxkPMzswL1m710N37g/exec"
@@ -356,13 +356,28 @@
         </div>
       </div>
 
-      <p class="note">Setelah kirim, Anda akan diarahkan ke halaman notifikasi terpisah.</p>
+      <p class="note">Setelah kirim, notifikasi akan muncul di halaman ini.</p>
     </form>
+
+    <!-- ===== Notifikasi Sukses (hidden by default) ===== -->
+    <div id="notifView" class="notif-card hidden" role="status" aria-live="polite">
+      <div class="notif-hero">
+        <div class="badge-ok">✓</div>
+        <div>
+          <h2 class="notif-title">Terimakasih!</h2>
+          <p class="notif-text" id="notifMsg">Lamaran kamu sudah berhasil kami terima.</p>
+        </div>
+      </div>
+      <div class="notif-actions">
+        <button type="button" class="btn btn-ghost" id="btnBack">Kembali</button>
+        <button type="button" class="btn btn-primary" id="btnPortal">Lihat lowongan lain</button>
+      </div>
+    </div>
   </div>
 
   <script>
     const PORTAL_URL = 'https://sourcingsimgroup.github.io/joblookerin/';
-    // NEW: dedicated in-page notification state URL param
+    // Bisa tetap dipakai untuk state URL (tanpa pindah halaman)
     const NOTIF_URL = './notifikasi.html';
 
     // Disable network calls inside ChatGPT canvas preview to avoid permission prompts
@@ -571,20 +586,38 @@
       console.assert(toDigits('Rp 1.250.000')==='1250000','toDigits test');
     })();
 
-        // === Validasi & Submit: PDF only + Redirect ke Notifikasi ===
+    // === Validasi & Submit: PDF only + TAMPILKAN NOTIFIKASI DI HALAMAN ===
     (function(){
       const form = byId('applyForm');
       const btn  = byId('submitBtn');
       const iframe = byId('submitFrame');
 
       iframe.addEventListener('load', function(){
-        // Setelah Apps Script merespon (iframe load), arahkan ke halaman notifikasi terpisah
+        // Tampilkan notifikasi sukses DI HALAMAN (tanpa redirect)
         const job  = byId('minat1').value || '';
         const area = byId('kotaMinat').value || '';
-        const url = new URL(NOTIF_URL, location.href);
-        if (job)  url.searchParams.set('job', job);
-        if (area) url.searchParams.set('area', area);
-        location.href = url.toString();
+
+        // Sembunyikan form, tampilkan kartu notifikasi
+        form.classList.add('hidden');
+        const notif = byId('notifView');
+        notif.classList.remove('hidden');
+
+        // Pesan dinamis
+        const baseMsg = 'Lamaran kamu sudah berhasil kami terima.';
+        const extra   = (job || area) ? ` (${[job, area].filter(Boolean).join(' • ')})` : '';
+        byId('notifMsg').textContent = `Terimakasih, ${baseMsg}${extra}`;
+
+        // Tombol aksi
+        byId('btnBack').onclick   = () => history.length > 1 ? history.back() : (location.href = PORTAL_URL);
+        byId('btnPortal').onclick = () => location.href = PORTAL_URL;
+
+        // (Opsional) ubah URL agar ada state /notifikasi tanpa reload
+        try {
+          const url = new URL(NOTIF_URL, location.href);
+          if (job)  url.searchParams.set('job', job);
+          if (area) url.searchParams.set('area', area);
+          history.replaceState(null, '', url.toString());
+        } catch(_) {}
       }, { once:true });
 
       form.addEventListener('submit', function(ev){
