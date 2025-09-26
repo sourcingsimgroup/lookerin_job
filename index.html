@@ -4,11 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LOOKERIN • Mini Job Portal</title>
-  <meta name="description" content="LOOKERIN – by SIMGROUP. Mini job portal dengan filter Area & Group Job (dependent), tampilan mobile & web, kartu kapsul, popup detail + Apply. Versi ini fokus pada: load data sempurna (CSV/JSON robust), cepat (cache + pager), dan fallback andal."/>
+  <meta name="description" content="LOOKERIN – by SIMGROUP. Mini job portal dengan filter Branch → Area → Group Job (dependent), tampilan mobile & web, kartu kapsul, popup detail + Apply. Fokus: load data sempurna (CSV/JSON robust), cepat (cache + pager), fallback andal."/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    :root{ --brand:#1BAFBF; --brand-ink:#0d5c66; --ink:#0f172a; --muted:#f1f5f9; --line:#e2e8f0; --bg:#ffffff; --card:#ffffff; --shadow:0 6px 20px rgba(0,0,0,.06); --radius:18px; --sticky-top:0px;}
+    :root{
+      --brand:#1BAFBF; --brand-ink:#0d5c66; --ink:#0f172a; --muted:#f1f5f9; --line:#e2e8f0; --bg:#ffffff; --card:#ffffff;
+      --shadow:0 6px 20px rgba(0,0,0,.06); --radius:18px; --sticky-top:0px;
+    }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -23,33 +26,40 @@
       background-repeat:no-repeat;background-size:auto,cover,cover,cover,cover;background-position:center,center,center,center,center;
     }
     .wrap{max-width:1100px;margin:0 auto;padding:20px 16px 80px}
+
+    /* Header dengan Logo PNG */
     header{position:sticky;top:0;z-index:30;background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(255,255,255,.92));backdrop-filter:saturate(140%) blur(6px);border-bottom:1px solid var(--line)}
-    .head-inner{max-width:1100px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:14px}
-    .logo{width:42px;height:42px;border-radius:12px;background:conic-gradient(from 120deg,#76e4ef,#22d3ee,#0ea5b8,#0891b2,#76e4ef);display:grid;place-items:center;box-shadow:var(--shadow)}
-    .logo::before{content:"";width:18px;height:18px;border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 3px rgba(255,255,255,.35)}
+    .head-inner{max-width:1100px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:14px}
+    .brand{display:flex;align-items:center;gap:10px;min-height:44px}
+    .brand img{height:36px;width:auto;display:block;object-fit:contain;filter: drop-shadow(0 2px 6px rgba(0,0,0,.08));}
     .title{display:flex;flex-direction:column}
-    .title h1{font-size:22px;line-height:1.1;margin:0;letter-spacing:.6px;font-weight:800;color:var(--brand-ink)}
+    .title h1{font-size:20px;line-height:1.1;margin:0;letter-spacing:.4px;font-weight:800;color:var(--brand-ink)}
     .title p{margin:2px 0 0;font-size:12px;color:#475569;font-weight:600}
     .hamburger{margin-left:auto;display:none;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-weight:800;cursor:pointer}
     .hamburger svg{width:18px;height:18px}
 
+    /* Filters */
     .filters{position:sticky; top:calc(var(--sticky-top)); z-index:25; margin:18px 0 10px;background:var(--muted);border:1px solid var(--line);padding:12px;border-radius:16px;box-shadow:var(--shadow)}
     .filters .row{display:flex;flex-wrap:wrap;gap:10px}
     .fgrp{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);padding:8px 10px;border-radius:12px}
     .fgrp label{font-size:12px;color:#334155;font-weight:700}
     .fgrp select{appearance:auto;border:none;outline:none;font-size:13px;padding:6px 8px;background:#fff;color:#0f172a;min-width:220px}
+    .fgrp select:disabled{opacity:.55;cursor:not-allowed;background:#f8fafc}
 
+    /* highlight select penting */
+    .fgrp:has(#f-branch), .fgrp:has(#mf-branch),
     .fgrp:has(#f-area), .fgrp:has(#mf-area){
       background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(248,250,252,.90)) padding-box,
                   linear-gradient(180deg, #e2e8f0, #cbd5e1) border-box;
       border:1px solid transparent; box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 -6px 12px rgba(255,255,255,.45), var(--shadow);
       position:relative;
     }
+    .fgrp:has(#f-branch)::after, .fgrp:has(#mf-branch)::after,
     .fgrp:has(#f-area)::after, .fgrp:has(#mf-area)::after{
       content:""; position:absolute; left:6px; right:6px; top:4px; height:40%; border-radius:10px;
       background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,0)); pointer-events:none;
     }
-    #f-area, #mf-area{
+    #f-branch, #mf-branch, #f-area, #mf-area{
       background: linear-gradient(180deg, rgba(255,255,255,.99), rgba(248,250,252,.92));
       border:1px solid #cbd5e1; border-radius:10px; box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
       padding:6px 10px;
@@ -65,14 +75,17 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 8px 0 rgba(15,23,42,.08), 0 10px 24px rgba(2,6,23,.08);
       text-shadow: 0 1px 0 rgba(255,255,255,.7);
       transition: transform .06s ease, box-shadow .12s ease, filter .2s ease;
+      padding:8px 12px;
     }
     #btn-apply, #mf-apply{
       background: linear-gradient(180deg, #2ad4d4 0%, #16a0a8 70%); border:1px solid #0e6771;
       box-shadow: inset 0 1px 0 rgba(255,255,255,.65), 0 8px 0 rgba(13,92,102,.18), 0 10px 24px rgba(2,6,23,.10);
       color:#00323a; text-shadow: 0 1px 0 rgba(255,255,255,.35);
       transition: transform .06s ease, box-shadow .12s ease, filter .2s ease;
+      padding:8px 12px;
     }
 
+    /* Grid */
     .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;min-height:40vh}
     @media (max-width:960px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media (max-width:640px){
@@ -81,6 +94,7 @@
       .hamburger{display:inline-flex}
     }
 
+    /* Card */
     .card{position:relative;border:1px solid var(--line);background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 14px 48px;transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease; cursor:pointer}
     .card:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.08);border-color:#bae6fd}
     .card:focus{outline:2px solid #bae6fd; outline-offset:2px}
@@ -112,15 +126,16 @@
     .sal{display:flex;align-items:center;gap:8px;font-size:12px;color:#075e62;margin-top:6px}
     .sal svg{width:16px;height:16px;flex:0 0 auto}
 
+    /* Pager */
     .pager{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px;position:sticky;bottom:0;background:linear-gradient(180deg,transparent, #fff 40%);padding:8px 0;z-index:10}
-    .pager .btn{padding:8px 12px}
     .page-info{font:600 12px/1.4 Montserrat,system-ui}
 
+    /* Status */
     .status{padding:24px;text-align:center;color:#334155}
 
+    /* Modal */
     dialog{width:min(700px, 94vw);border:none;border-radius:20px;padding:0;box-shadow:0 30px 80px rgba(0,0,0,.35)}
     #dlg::backdrop{backdrop-filter: blur(6px); background: rgba(0,0,0,.2)}
-
     .modal{padding:18px 18px 16px}
     .modal .title h2{font-size:20px;color:#062e33;margin:0}
     .modal .sub{margin:6px 0 10px;font-size:13px;color:#0b4c57;font-weight:700}
@@ -133,6 +148,7 @@
     .apply-btn{display:inline-flex;align-items:center;gap:8px}
     .apply-btn svg{color:#d72638}
 
+    /* Dialog Filter Mobile */
     #dlg-filter::backdrop{background:rgba(0,0,0,.4)}
     #dlg-filter{width:min(520px,96vw);border:none;border-radius:16px;padding:0;overflow:hidden}
     .mfilter-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);background:#fff}
@@ -140,21 +156,14 @@
     .mfilter-row{display:flex;flex-direction:column;gap:8px}
     .mfilter-row .fgrp{width:100%}
     .mfilter-ft{display:flex;justify-content:flex-end;gap:8px;padding:12px 14px;border-top:1px solid var(--line);background:#fff}
-
-    .toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);padding:10px 14px;border-radius:999px;font:800 13px/1.1 Montserrat;box-shadow:0 10px 24px rgba(0,0,0,.12);z-index:99999;border:1px solid transparent}
-    .toast-ok {background:#10b981;color:#022c22;border-color:#0ea5a5}
-    .toast-err{background:#ef4444;color:#fff;border-color:#b91c1c}
-
-    @media (prefers-reduced-motion: no-preference){
-      @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
-      .logo{animation:pulse 3s ease-in-out infinite}
-    }
   </style>
 </head>
 <body>
   <header>
     <div class="head-inner">
-      <div class="logo" aria-hidden="true"></div>
+      <div class="brand">
+        <img src="https://res.cloudinary.com/dkihurh8o/image/upload/v1758795380/Logo_-_Lookerin-1_z3iqa8.png" alt="LOOKERIN logo">
+      </div>
       <div class="title">
         <h1>LOOKERIN</h1>
         <p>by SIMGROUP</p>
@@ -167,15 +176,20 @@
   </header>
 
   <div class="wrap">
+    <!-- Filters (desktop & tablet) : urutan Branch → Area → Group -->
     <section class="filters" aria-label="Filter Loker">
       <div class="row">
         <div class="fgrp">
+          <label for="f-branch">Branch</label>
+          <select id="f-branch" title="Pilih Branch (Kolom B)"></select>
+        </div>
+        <div class="fgrp">
           <label for="f-area">Area</label>
-          <select id="f-area" title="Pilih Area (Kolom C)"></select>
+          <select id="f-area" title="Pilih Branch dulu" disabled></select>
         </div>
         <div class="fgrp">
           <label for="f-parent">Group Job</label>
-          <select id="f-parent" title="Pilih Group Job (Kolom E)"></select>
+          <select id="f-parent" title="Pilih Area dulu" disabled></select>
         </div>
         <div class="f-actions">
           <button class="btn btn-ghost" id="btn-clear" type="button">Clear</button>
@@ -184,6 +198,7 @@
       </div>
     </section>
 
+    <!-- Grid / Results -->
     <div id="status" class="status" role="status" aria-live="polite" aria-busy="true">Mengambil data…</div>
     <section id="grid" class="grid" hidden></section>
     <div id="pager" class="pager" hidden>
@@ -193,6 +208,7 @@
     </div>
   </div>
 
+  <!-- Modal Detail -->
   <dialog id="dlg">
     <div class="modal">
       <button class="x" id="dlg-x" aria-label="Tutup">×</button>
@@ -217,6 +233,7 @@
     </div>
   </dialog>
 
+  <!-- Dialog Filter Mobile (urutan sama) -->
   <dialog id="dlg-filter">
     <div class="mfilter-hd">
       <strong>Filter</strong>
@@ -225,12 +242,16 @@
     <div class="mfilter-bd">
       <div class="mfilter-row">
         <div class="fgrp">
+          <label for="mf-branch">Branch</label>
+          <select id="mf-branch"></select>
+        </div>
+        <div class="fgrp">
           <label for="mf-area">Area</label>
-          <select id="mf-area"></select>
+          <select id="mf-area" title="Pilih Branch dulu" disabled></select>
         </div>
         <div class="fgrp">
           <label for="mf-parent">Group Job</label>
-          <select id="mf-parent"></select>
+          <select id="mf-parent" title="Pilih Area dulu" disabled></select>
         </div>
       </div>
     </div>
@@ -247,11 +268,11 @@
     'use strict';
     // ====== CONFIG ======
     const DOC_ID = '1ESGkZf2P_0XMnyJgb7wN_L_Xo144nO6GPg30rrBZW58';
-    const SHEET  = 'Sheet1';   // tetap dipakai sebagai fallback
-    const GID    = '0';        // target Tab pertama di file yang Anda kirim
+    const SHEET  = 'Sheet1';
+    const GID    = '0';
     const APPLY_URL = 'apply.html';
 
-    // Endpoints (fallback berlapis) — dahulukan CSV by gid agar tidak terpengaruh Filter View
+    // Endpoints (prioritas CSV by gid)
     const GVIZ_JSON_SHEET = `https://docs.google.com/spreadsheets/d/${DOC_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET)}`;
     const GVIZ_JSON_GID   = `https://docs.google.com/spreadsheets/d/${DOC_ID}/gviz/tq?tqx=out:json&gid=${GID}`;
     const GVIZ_CSV_SHEET  = `https://docs.google.com/spreadsheets/d/${DOC_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET)}`;
@@ -260,11 +281,9 @@
     const EXPORT_CSV_SHEET= `https://docs.google.com/spreadsheets/d/${DOC_ID}/export?format=csv&sheet=${encodeURIComponent(SHEET)}`;
     const MIRROR = u => 'https://r.jina.ai/https/' + u.replace(/^https?:\/\//,'');
 
-    // Kolom: C=Area, D=Nama Job, E=Group Job, F=Kualifikasi, G=Salary, H=Status
-    const COL = { AREA:2, JOB_NAME:3, JOB_PARENT:4, QUAL:5, SALARY:6, STATUS:7 };
-
-    // bump cache key supaya tidak nempel ke data 5 baris sebelumnya
-    const CACHE_KEY = 'lookerin_cache_v10';
+    // Kolom: B=Branch, C=Area, D=Nama Job, E=Group Job, F=Kualifikasi, G=Salary, H=Status
+    const COL = { BRANCH:1, AREA:2, JOB_NAME:3, JOB_PARENT:4, QUAL:5, SALARY:6, STATUS:7 };
+    const CACHE_KEY = 'lookerin_cache_v13';
 
     // ====== Elemen ======
     const $grid = document.getElementById('grid');
@@ -274,7 +293,8 @@
     const $pgNext = document.getElementById('pg-next');
     const $pgInfo = document.getElementById('pg-info');
 
-    const $area = document.getElementById('f-area');
+    const $branch = document.getElementById('f-branch');
+    const $area   = document.getElementById('f-area');
     const $parent = document.getElementById('f-parent');
     const $btnApply = document.getElementById('btn-apply');
     const $btnClear = document.getElementById('btn-clear');
@@ -291,6 +311,7 @@
 
     const $openFilter = document.getElementById('btn-open-filter');
     const $dlgFilter = document.getElementById('dlg-filter');
+    const $mfBranch = document.getElementById('mf-branch');
     const $mfArea = document.getElementById('mf-area');
     const $mfParent = document.getElementById('mf-parent');
     const $mfApply = document.getElementById('mf-apply');
@@ -299,23 +320,23 @@
 
     let rows = [];
     let page = 1;
-    let pageSize = 9; // ubah ke 9 jika ingin fix 9 per page
+    let pageSize = 12;
     let filtered = [];
-    const SHOW_DBG = false;
 
     // ====== Util ======
     const collator = new Intl.Collator('id');
     const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
-    const nl2br = s => String(s == null ? '' : s).replace(/\r?\n/g,'<br>');
     const norm = s => String(s == null ? '' : s).trim();
     const toKey = s => norm(s).toLowerCase();
     const uniqNorm = (arr) => { const map = new Map(); for(const v of arr){ const k = toKey(v); if(k && !map.has(k)) map.set(k, v); } return [...map.values()].sort((a,b)=>collator.compare(a,b)); };
 
-    function setOptions(el, list, placeholder){ el.innerHTML = `<option value="">${placeholder}</option>` + list.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join(''); }
+    function setOptions(el, list, placeholder){
+      el.innerHTML = `<option value="">${placeholder}</option>` + list.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+    }
 
     function looksLikeHeader(r0){
       const base = (r0||[]).map(x=>String(x||'').toLowerCase());
-      const keys = ['area','nama job','job parent','group job','kualifikasi','salary','gaji','status'];
+      const keys = ['branch','area','nama job','job parent','group job','kualifikasi','salary','gaji','status'];
       return keys.some(k => base.includes(k));
     }
     function stripHeader(arr){ if(!arr || !arr.length) return arr || []; return looksLikeHeader(arr[0]) ? arr.slice(1) : arr; }
@@ -330,7 +351,6 @@
         else { cur+=c; }
       }
       if(cur.length>0 || row.length){ row.push(cur); out.push(row); }
-      // buang baris kosong total
       const cleaned = out.filter(r=> r && r.some(cell => String(cell||'').trim().length));
       return stripHeader(cleaned);
     }
@@ -339,7 +359,6 @@
         const json = JSON.parse(txt.slice(txt.indexOf('(')+1, txt.lastIndexOf(')')));
         const rs = (json.table && json.table.rows) ? json.table.rows : [];
         const arr = rs.map(r => (r.c||[]).map(c => c ? (c.f ?? c.v ?? '') : ''));
-        // buang baris kosong total
         return arr.filter(r=> r && r.some(cell => String(cell||'').trim().length));
       } catch{ return []; }
     }
@@ -352,7 +371,6 @@
       } finally { clearTimeout(id); }
     }
     async function getData(){
-      // urutan: CSV by gid → gviz CSV gid → gviz JSON gid → CSV by sheet → mirror-mirror
       const order = [
         EXPORT_CSV_GID,
         GVIZ_CSV_GID,
@@ -371,17 +389,9 @@
       for(const url of order){
         try{
           const text = await fetchWithTimeout(url);
-          let arr = [];
-          if(url.includes('out:json')){
-            arr = parseGVizJSON(text);
-          } else {
-            // out:csv / export CSV
-            arr = parseCSV(text);
-          }
+          const arr = url.includes('out:json') ? parseGVizJSON(text) : parseCSV(text);
           if(arr && arr.length){
-            // pilih hasil dengan jumlah baris terbanyak di antara fallback
             if(!best || arr.length > best.rows.length){ best = {rows: arr, source: url}; }
-            // heuristik: kalau sudah > 20 baris, cukup (hindari tunggu semua fallback)
             if(arr.length >= 20) break;
           }
         }catch(e){ lastErr = e.message; }
@@ -390,24 +400,73 @@
       throw new Error('Semua sumber gagal ('+ lastErr +'). Pastikan Tab target dapat diakses publik (Viewer).');
     }
 
-    function updateParentOptions(){
-      const areaVal = $area.value; const key = toKey(areaVal);
-      const parents = uniqNorm(rows.filter(r => !areaVal || toKey(r[COL.AREA]) === key).map(r => r[COL.JOB_PARENT]||''));
-      setOptions($parent, parents, 'Semua Group Job');
-    }
-    function updateMobileParentOptions(){
-      const areaVal = $mfArea.value || $area.value; const key = toKey(areaVal);
-      const parents = uniqNorm(rows.filter(r => !areaVal || toKey(r[COL.AREA]) === key).map(r => r[COL.JOB_PARENT]||''));
-      setOptions($mfParent, parents, 'Semua Group Job');
-    }
-    function fillFilters(){
-      const areas = uniqNorm(rows.map(r => r[COL.AREA]||''));
-      setOptions($area, areas, 'Semua Area');
+    // ====== Dependent options: Branch → Area → Group
+    function updateAreaOptions(){
+      const bKey = toKey($branch.value);
+      const areas = uniqNorm(
+        rows
+          .filter(r => !bKey || toKey(r[COL.BRANCH]) === bKey)
+          .map(r => r[COL.AREA] || '')
+      );
+      setOptions($area, areas, bKey ? 'Semua Area' : 'Pilih Branch dulu');
+      $area.disabled = !bKey || areas.length === 0;
+
+      // Reset & update Group Job setelah area berubah
+      $parent.value = '';
       updateParentOptions();
-      setOptions($mfArea, areas, 'Semua Area');
+    }
+
+    function updateParentOptions(){
+      const bKey = toKey($branch.value);
+      const aKey = toKey($area.value);
+      const parents = uniqNorm(
+        rows
+          .filter(r => (!bKey || toKey(r[COL.BRANCH]) === bKey) && (!aKey || toKey(r[COL.AREA]) === aKey))
+          .map(r => r[COL.JOB_PARENT] || '')
+      );
+      setOptions($parent, parents, (bKey && aKey) ? 'Semua Group Job' : 'Pilih Area dulu');
+      $parent.disabled = !(bKey && aKey) || parents.length === 0;
+    }
+
+    function updateMobileAreaOptions(){
+      const bKey = toKey($mfBranch.value || $branch.value);
+      const areas = uniqNorm(
+        rows
+          .filter(r => !bKey || toKey(r[COL.BRANCH]) === bKey)
+          .map(r => r[COL.AREA] || '')
+      );
+      setOptions($mfArea, areas, bKey ? 'Semua Area' : 'Pilih Branch dulu');
+      $mfArea.disabled = !bKey || areas.length === 0;
+
+      $mfParent.value = '';
       updateMobileParentOptions();
     }
 
+    function updateMobileParentOptions(){
+      const bKey = toKey($mfBranch.value || $branch.value);
+      const aKey = toKey($mfArea.value || $area.value);
+      const parents = uniqNorm(
+        rows
+          .filter(r => (!bKey || toKey(r[COL.BRANCH]) === bKey) && (!aKey || toKey(r[COL.AREA]) === aKey))
+          .map(r => r[COL.JOB_PARENT] || '')
+      );
+      setOptions($mfParent, parents, (bKey && aKey) ? 'Semua Group Job' : 'Pilih Area dulu');
+      $mfParent.disabled = !(bKey && aKey) || parents.length === 0;
+    }
+
+    function fillFilters(){
+      // Branch global dulu
+      const branches = uniqNorm(rows.map(r => r[COL.BRANCH]||''));
+      setOptions($branch, branches, 'Semua Branch');
+      // Area & Group mengikuti (awalnya disabled)
+      updateAreaOptions();
+
+      // Mobile
+      setOptions($mfBranch, branches, 'Semua Branch');
+      updateMobileAreaOptions();
+    }
+
+    // ====== Icons & card helpers
     const I = {
       briefcase:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2h3a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V8a2 2 0 0 1 2-2h3V4Zm2 0v2h2V4h-2Z"/></svg>',
       tag:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 12V5h7l7 7-7 7-7-7Zm12-5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>',
@@ -454,15 +513,19 @@
         </article>`;
     }
 
+    // ====== Filtering
     function applyFilter(){
+      const bKey = toKey($branch.value);
       const aKey = toKey($area.value);
       const pKey = toKey($parent.value);
       filtered = rows.filter(r => {
-        const rArea = toKey(r[COL.AREA]);
+        const rBranch = toKey(r[COL.BRANCH]);
+        const rArea   = toKey(r[COL.AREA]);
         const rParent = toKey(r[COL.JOB_PARENT]);
+        const okB = bKey ? rBranch === bKey : true;
         const okA = aKey ? rArea === aKey : true;
         const okP = pKey ? rParent === pKey : true;
-        return okA && okP;
+        return okB && okA && okP;
       });
       page = 1;
       renderPage();
@@ -485,11 +548,9 @@
       for(let i=0;i<slice.length;i++){ html += templateCard(slice[i], start + i); }
       $grid.insertAdjacentHTML('beforeend', html);
 
-      // Pager
-      $pager.hidden = false;
+      document.getElementById('pager').hidden = false;
       $pgInfo.textContent = `Halaman ${page} dari ${totalPages} • ${total} job`;
       $pgPrev.disabled = page<=1; $pgNext.disabled = page>=totalPages;
-
       adjustMinHeight();
     }
 
@@ -515,60 +576,73 @@
     function openModalByIndex(absIndex){
       const r = filtered[absIndex] || [];
       const job = r[COL.JOB_NAME], parent = r[COL.JOB_PARENT], area = r[COL.AREA], qual = r[COL.QUAL], sal = r[COL.SALARY];
-      document.getElementById('dlg-job').textContent = job || '-';
-      document.getElementById('dlg-parent').textContent = parent ? `Group Job: ${parent}` : '-';
-      document.getElementById('dlg-area').textContent = area || '-';
-      document.getElementById('dlg-salary').textContent = sal || '-';
-      document.getElementById('dlg-qual').innerHTML = qualToHTML(qual || '');
+      $dJob.textContent = job || '-';
+      $dParent.textContent = parent ? `Group Job: ${parent}` : '-';
+      $dArea.textContent = area || '-';
+      $dSalary.textContent = sal || '-';
+      $dQual.innerHTML = qualToHTML(qual || '');
       const params = new URLSearchParams({ job: job || '', area: area || '' });
-      document.getElementById('dlg-apply').href = `${APPLY_URL}?${params.toString()}`;
-      const $dlg = document.getElementById('dlg');
+      $dlgApply.href = `${APPLY_URL}?${params.toString()}`;
       if(typeof $dlg.showModal === 'function') $dlg.showModal(); else $dlg.setAttribute('open','');
     }
-    function closeModal(){ const $dlg = document.getElementById('dlg'); if($dlg.open) $dlg.close(); else $dlg.removeAttribute('open'); }
+    function closeModal(){ if($dlg.open) $dlg.close(); else $dlg.removeAttribute('open'); }
 
+    // ====== Events ======
     document.addEventListener('click', e => {
       if(e.target.closest('.pill-detail')){
-        const card = e.target.closest('.card'); if(!card) return;
-        openModalByIndex(Number(card.dataset.i)); return;
+        const card = e.target.closest('.card');
+        if(card){ openModalByIndex(Number(card.dataset.i)); return; }
       }
       const card = e.target.closest('.card');
-      if(card && document.getElementById('grid').contains(card)){
-        openModalByIndex(Number(card.dataset.i));
-      }
+      if(card && $grid.contains(card)){ openModalByIndex(Number(card.dataset.i)); }
     });
     document.addEventListener('keydown', e => {
       const card = e.target.closest('.card');
-      if(card && (e.key === 'Enter' || e.key === ' ')){
-        e.preventDefault();
-        openModalByIndex(Number(card.dataset.i));
-      }
+      if(card && (e.key === 'Enter' || e.key === ' ')){ e.preventDefault(); openModalByIndex(Number(card.dataset.i)); }
     });
 
-    document.getElementById('dlg-x').addEventListener('click', closeModal);
-    document.getElementById('dlg-close').addEventListener('click', closeModal);
+    $dlgX.addEventListener('click', closeModal);
+    $dlgClose.addEventListener('click', closeModal);
 
     // Filter desktop
-    document.getElementById('btn-apply').addEventListener('click', applyFilter);
-    document.getElementById('btn-clear').addEventListener('click', ()=>{ $area.value=''; updateParentOptions(); $parent.value=''; applyFilter(); });
-    $area.addEventListener('change', ()=>{ updateParentOptions(); $parent.value=''; applyFilter(); });
+    $btnApply.addEventListener('click', applyFilter);
+    $btnClear.addEventListener('click', ()=>{
+      $branch.value=''; $area.value=''; $parent.value='';
+      updateAreaOptions(); // ini juga akan updateParentOptions & disable sesuai state
+      applyFilter();
+    });
+    $branch.addEventListener('change', ()=>{ updateAreaOptions(); applyFilter(); });
+    $area.addEventListener('change', ()=>{ updateParentOptions(); applyFilter(); });
     $parent.addEventListener('change', applyFilter);
 
-    // Pager actions
+    // Pager
     $pgPrev.addEventListener('click', ()=>{ page--; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); });
     $pgNext.addEventListener('click', ()=>{ page++; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); });
 
     // Filter Mobile
-    document.getElementById('btn-open-filter').addEventListener('click', ()=>{
-      document.getElementById('mf-area').value = $area.value || '';
+    $openFilter.addEventListener('click', ()=>{
+      $mfBranch.value = $branch.value || '';
+      updateMobileAreaOptions();
+      $mfArea.value = $area.value || '';
       updateMobileParentOptions();
-      document.getElementById('mf-parent').value = $parent.value || '';
-      if(typeof document.getElementById('dlg-filter').showModal === 'function') document.getElementById('dlg-filter').showModal(); else document.getElementById('dlg-filter').setAttribute('open','');
+      $mfParent.value = $parent.value || '';
+      if(typeof $dlgFilter.showModal === 'function') $dlgFilter.showModal(); else $dlgFilter.setAttribute('open','');
     });
-    document.getElementById('mf-area').addEventListener('change', ()=>{ updateMobileParentOptions(); document.getElementById('mf-parent').value=''; });
-    document.getElementById('mf-apply').addEventListener('click', ()=>{ $area.value = document.getElementById('mf-area').value; updateParentOptions(); $parent.value = document.getElementById('mf-parent').value; applyFilter(); if(document.getElementById('dlg-filter').open) document.getElementById('dlg-filter').close(); });
-    document.getElementById('mf-clear').addEventListener('click', ()=>{ document.getElementById('mf-area').value=''; updateMobileParentOptions(); document.getElementById('mf-parent').value=''; });
-    document.getElementById('mf-close').addEventListener('click', ()=>{ if(document.getElementById('dlg-filter').open) document.getElementById('dlg-filter').close(); });
+    $mfBranch.addEventListener('change', ()=>{ updateMobileAreaOptions(); $mfParent.value=''; });
+    $mfArea.addEventListener('change', ()=>{ updateMobileParentOptions(); });
+    $mfApply.addEventListener('click', ()=>{
+      $branch.value = $mfBranch.value;
+      $area.value   = $mfArea.value;
+      updateAreaOptions(); // memastikan state enable/opsi sinkron
+      $parent.value = $mfParent.value;
+      applyFilter();
+      if($dlgFilter.open) $dlgFilter.close();
+    });
+    $mfClear.addEventListener('click', ()=>{
+      $mfBranch.value=''; $mfArea.value=''; $mfParent.value='';
+      updateMobileAreaOptions(); updateMobileParentOptions();
+    });
+    $mfClose.addEventListener('click', ()=>{ if($dlgFilter.open) $dlgFilter.close(); });
 
     // ====== Init ======
     (async function init(){
@@ -577,7 +651,6 @@
       updateSticky();
       window.addEventListener('resize', ()=>{ updateSticky(); renderPage(); adjustMinHeight(); });
 
-      const dbg = document.getElementById('dbg');
       try{
         const cache = localStorage.getItem(CACHE_KEY);
         if(cache){
@@ -585,14 +658,11 @@
           if(Array.isArray(cached.rows) && cached.rows.length){
             rows = cached.rows;
             fillFilters(); applyFilter();
-            if(dbg && cached.rows.length){ /* debug off by default */ }
           }
         }
         const res = await getData();
         rows = stripHeader(res.rows || res) || [];
-        // buang baris kosong, dan pastikan ada isi minimal di kolom penting
-        rows = rows.filter(r => r && (String(r[COL.JOB_NAME]||'').trim() || String(r[COL.JOB_PARENT]||'').trim() || String(r[COL.AREA]||'').trim()));
-        // simpan ulang cache
+        rows = rows.filter(r => r && (String(r[COL.JOB_NAME]||'').trim() || String(r[COL.JOB_PARENT]||'').trim() || String(r[COL.AREA]||'').trim() || String(r[COL.BRANCH]||'').trim()));
         localStorage.setItem(CACHE_KEY, JSON.stringify({rows}));
         fillFilters(); applyFilter();
         $status.hidden = true; $grid.hidden = false; $status.setAttribute('aria-busy','false');
@@ -603,7 +673,7 @@
       adjustMinHeight();
     })();
 
-    // === Toast setelah kembali dari submit ===
+    // Toast setelah submit (opsional)
     (function(){
       const q = new URLSearchParams(location.search);
       if (q.get('submitted') === '1') {
